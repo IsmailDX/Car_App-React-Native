@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -7,12 +7,31 @@ import {
   SafeAreaView,
   Image,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { icons, images } from "../constants";
 import { ScreenHeaderBtn } from "../components";
-import { useFonts } from "expo-font";
+import dataset from "../dataset/vehicles.json";
 
 const HomeScreen = () => {
+  const [vehicles, setVehicles] = useState(dataset.vehicles);
+  const [filteredvehicles, setFilteredVehicles] = useState(dataset.vehicles);
+
+  const getImage = (id) => {
+    if (id == 1) return images.image_v_1;
+    if (id == 2) return images.image_v_2;
+    if (id == 3) return images.image_v_3;
+    if (id == 4) return images.image_v_4;
+  };
+
+  const searchVehicles = (keyword) => {
+    const lowerCase = keyword.toLowerCase();
+    const results = vehicles.filter((vehicle) => {
+      return vehicle.make.toLowerCase().includes(lowerCase);
+    });
+    setFilteredVehicles(results);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Stack.Screen
@@ -34,7 +53,11 @@ const HomeScreen = () => {
         </View>
         <View style={styles.searchSection}>
           <View style={styles.searchPallet}>
-            <TextInput style={styles.searchInput} placeholder="Search a Car" />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search a Car"
+              onChangeText={(text) => searchVehicles(text)}
+            />
             <View style={styles.searchIconArea}>
               <Image
                 source={icons.magnifying_glass}
@@ -52,12 +75,43 @@ const HomeScreen = () => {
           <Text style={styles.typesText}>Hatchback</Text>
         </View>
         <View style={styles.listSection}>
-          <Text>Most Rented</Text>
+          <Text style={styles.headText}>Most Rented</Text>
+          <ScrollView style={styles.elementPallet}>
+            {filteredvehicles.map((vehicle) => {
+              return (
+                <View style={styles.element} key={vehicle.id}>
+                  <View style={styles.infoArea}>
+                    <Text style={styles.infoTitle}>
+                      {vehicle.make} {vehicle.model}
+                    </Text>
+                    <Text style={styles.infoSub}>
+                      {vehicle.type}-{vehicle.transmission}
+                    </Text>
+                    <Text style={styles.infoPrice}>
+                      <Text style={styles.infoAmount}>
+                        {vehicle.price_per_day}
+                      </Text>
+                      /day
+                    </Text>
+                  </View>
+                  <View style={styles.imageArea}>
+                    <Image
+                      source={getImage(vehicle.id)}
+                      resizeMode="contain"
+                      style={styles.vehicleImage}
+                    />
+                  </View>
+                </View>
+              );
+            })}
+          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
   );
 };
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -69,8 +123,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 35,
   },
   headerSection: {
-    height: 100,
-    backgroundColor: "red",
+    height: 70,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -132,6 +185,60 @@ const styles = StyleSheet.create({
     fontFamily: "FontBold",
     color: "#696969",
   },
+  listSection: {
+    marginTop: 25,
+  },
+  headText: {
+    fontSize: 20,
+    fontFamily: "FontBold",
+    marginBottom: 10,
+  },
+  elementPallet: {
+    width: "110%",
+    height: 450,
+    marginHorizontal: -15,
+    paddingHorizontal: 15,
+  },
+  element: {
+    height: 100,
+    borderRadius: 10,
+    backgroundColor: "white",
+    flexDirection: "row",
+    padding: 15,
+    marginBottom: 15,
+  },
+  infoArea: {
+    flex: 1,
+  },
+  infoTitle: {
+    fontSize: 16,
+    fontFamily: "FontBold",
+  },
+  infoSub: {
+    fontSize: 12,
+    fontFamily: "FontMedium",
+    color: "#696969",
+  },
+  infoPrice: {
+    position: "absolute",
+    bottom: 0,
+    fontSize: 12,
+    color: "#696969",
+    fontFamily: "FontBold",
+  },
+  infoAmount: {
+    fontSize: 12,
+    color: "black",
+    fontFamily: "FontMedium",
+  },
+  imageArea: {
+    flex: 1,
+  },
+  vehicleImage: {
+    position: "absolute",
+    top: -15,
+    left: -20,
+    width: "140%",
+    height: "140%",
+  },
 });
-
-export default HomeScreen;
