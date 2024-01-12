@@ -8,6 +8,8 @@ import settingsIcon_active from "../assets/icons/settings-active.png";
 import settingsIcon from "../assets/icons/settings.png";
 import menu from "../assets/icons/menu.png";
 import magnifying_glass from "../assets/icons/magnifying-glass.png";
+import back from "../assets/icons/left-arrow.png";
+import dots from "../assets/icons/dots.png";
 
 export default {
   homeIcon_active,
@@ -20,4 +22,6 @@ export default {
   settingsIcon_active,
   menu,
   magnifying_glass,
+  back,
+  dots,
 };

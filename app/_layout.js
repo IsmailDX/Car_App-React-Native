@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router/tabs";
 import React, { useCallback } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, KeyboardAvoidingView, StyleSheet, View } from "react-native";
 import { icons } from "../constants";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -31,7 +31,7 @@ const Layout = () => {
           tabBarIcon: ({ focused }) => {
             let iconName;
 
-            if (route.name == "HomeScreen") {
+            if (route.name == "index") {
               iconName = focused ? icons.homeIcon_active : icons.homeIcon;
             } else if (route.name == "MapScreen") {
               iconName = focused ? icons.mapsIcon_active : icons.mapsIcon;
@@ -52,6 +52,7 @@ const Layout = () => {
             );
           },
           tabBarShowLabel: false,
+          tabBarHideOnKeyboard: true,
           tabBarStyle: {
             backgroundColor: "black",
             borderTopStartRadius: 30,
@@ -63,13 +64,7 @@ const Layout = () => {
         <Tabs.Screen
           name="index"
           options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="HomeScreen"
-          options={{
-            href: "/HomeScreen",
+            href: "/",
           }}
         />
 
@@ -91,6 +86,13 @@ const Layout = () => {
           name="SettingsScreen"
           options={{
             href: "/SettingsScreen",
+          }}
+        />
+
+        <Tabs.Screen
+          name="InfoScreen"
+          options={{
+            href: null,
           }}
         />
       </Tabs>
